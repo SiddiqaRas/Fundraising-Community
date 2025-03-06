@@ -1,0 +1,134 @@
+Register.sol
+//SPDX-License-Identifier: MIT
+ pragma solidity ^0.8.26;
+ contract Register {
+    mapping(address => bool) private registeredUsers;
+
+    // Check if the user is registered
+    function isRegistered(address user) public view returns (bool) {
+        return registeredUsers[user];
+    }
+
+    // Register the user
+    function registerUser(address user) public {
+        require(!registeredUsers[user], "User is already registered.");
+        registeredUsers[user] = true;
+    }
+}
+
+Create.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.26;
+
+contract CampaignContract {
+    // Struct to hold campaign details
+    struct Campaign {
+        string blockchainId;    // Blockchain-specific campaign identifier (e.g., b1, b2, b3, ...)
+        address userWallet;     // Wallet address of the campaign creator
+        uint256 amountToRaise;  // Amount the campaign aims to raise (stored in smallest unit)
+        bool isActive;          // Status: pending (false) or active (true)
+    }
+
+    // Mapping to store campaigns by blockchainId (unique)
+    mapping(string => Campaign) public campaigns;
+
+    // Events for logging
+    event CampaignAdded(string blockchainId, address userWallet, uint256 amountToRaise);
+    event CampaignConfirmed(string blockchainId);
+
+    // Factor for scaling (e.g., 100 for cents)
+    uint256 constant SCALE_FACTOR = 100;
+
+    // Admin wallet address (hardcoded)
+    address public adminWallet = 0x0ECb73E8adbF506c986D89Bd016B1f6A9E1882c1;
+
+    // Function to add a pending campaign with decimal support (scaled to integer)
+    function addCampaign(
+        string memory _blockchainId, // The unique blockchain ID (e.g., b1, b2, b3, ...)
+        address _userWallet,         // Wallet address of the campaign creator
+        uint256 _amountToRaise       // Amount to raise for the campaign (in decimal)
+    ) external {
+        require(bytes(_blockchainId).length > 0, "Blockchain ID cannot be empty");
+        require(bytes(campaigns[_blockchainId].blockchainId).length == 0, "Campaign with this blockchainId already exists");
+        require(_userWallet == msg.sender, "The wallet address must match the sender");
+
+        // Scale the amount by the factor (e.g., multiply by 100 for cents)
+        uint256 scaledAmount = _amountToRaise * SCALE_FACTOR;
+
+        // Add the campaign to the mapping in a pending state
+        campaigns[_blockchainId] = Campaign({
+            blockchainId: _blockchainId,
+            userWallet: _userWallet,
+            amountToRaise: scaledAmount,
+            isActive: false
+        });
+
+        emit CampaignAdded(_blockchainId, _userWallet, scaledAmount);
+    }
+
+    // Function for the admin to confirm the campaign (only admin can approve)
+    function confirmCampaign(string memory _blockchainId) external {
+        Campaign storage campaign = campaigns[_blockchainId];
+        require(bytes(campaign.blockchainId).length > 0, "Campaign does not exist");
+        require(msg.sender == adminWallet, "Only the admin can confirm the campaign");
+        require(!campaign.isActive, "Campaign is already active");
+
+        // Activate the campaign
+        campaign.isActive = true;
+
+        emit CampaignConfirmed(_blockchainId);
+    }
+
+    // Function to retrieve campaign details with decimals
+    function getCampaign(string memory _blockchainId)
+        external
+        view
+        returns (string memory, address, uint256, bool)
+    {
+        Campaign memory campaign = campaigns[_blockchainId];
+        require(bytes(campaign.blockchainId).length > 0, "Campaign does not exist");
+
+        // Convert amount to raise back to decimal format
+        uint256 amountToRaiseWithDecimals = campaign.amountToRaise / SCALE_FACTOR;
+
+        return (campaign.blockchainId, campaign.userWallet, amountToRaiseWithDecimals, campaign.isActive);
+    }
+}
+
+
+Donate.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.26;
+
+import "./usercampaigncreation.sol"; // Import the CampaignContract interface
+
+contract DonationContract {
+    // Instance of the CampaignContract
+    CampaignContract public campaignContract;
+
+    // Events
+    event DonationMade(string indexed blockchainId, address indexed donor, uint256 amount);
+
+    // Constructor to set the CampaignContract address
+    constructor(address _campaignContractAddress) {
+        campaignContract = CampaignContract(_campaignContractAddress);
+    }
+
+    // Function to donate directly to a specific campaign
+    function donate(string memory _blockchainId) external payable {
+        require(msg.value > 0, "Donation amount must be greater than zero");
+
+        // Retrieve campaign details from the CampaignContract
+        (, address campaignCreator, , bool isActive) = campaignContract.getCampaign(_blockchainId);
+
+        // Check if the campaign exists and is active
+        require(campaignCreator != address(0), "Campaign does not exist");
+        require(isActive, "Campaign is not active");
+
+        // Transfer the donation directly to the campaign creator
+        payable(campaignCreator).transfer(msg.value);
+
+        // Emit a donation event
+        emit DonationMade(_blockchainId, msg.sender, msg.value);
+    }
+}
