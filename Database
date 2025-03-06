@@ -1,0 +1,111 @@
+CREATE TABLE contactus (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    Name VARCHAR(50) NOT NULL,
+    Email VARCHAR(100) NOT NULL,
+    Message TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE feedback (
+    feedback_id INT AUTO_INCREMENT PRIMARY KEY,
+    feedback_title VARCHAR(100) NOT NULL,
+    feedback_type VARCHAR(50) NOT NULL,
+    feedback_details TEXT NOT NULL,
+    priority_level VARCHAR(20) NOT NULL,
+    adminID INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (adminID) REFERENCES admin_signup(admin_id)
+);
+
+CREATE TABLE admin_signup (
+    admin_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    profile_picture VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    wallet VARCHAR(255) NOT NULL UNIQUE,
+    profile_picture VARCHAR(255)
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE `campaigns` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `campaignTitle` VARCHAR(255) NOT NULL,
+    `campaignRunBy` VARCHAR(255) NOT NULL,
+    `campaignDescription` TEXT NOT NULL,
+    `amountToRaise` DECIMAL(10, 2) NOT NULL,
+    `tags` VARCHAR(255) NOT NULL,
+    `blockchain_id` VARCHAR(255) NOT NULL,
+    `user_id` INT NOT NULL,
+    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE `campaign_images` (
+    `image_id` INT AUTO_INCREMENT PRIMARY KEY,
+    `campaign_id` INT NOT NULL,
+    `image_url` VARCHAR(255) NOT NULL,
+    `image_type` ENUM('main', 'supporting') NOT NULL DEFAULT 'supporting'
+);
+
+ALTER TABLE `campaigns`
+ADD CONSTRAINT `fk_user_id`
+FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE;
+
+ALTER TABLE `campaign_images`
+ADD CONSTRAINT `fk_campaign_id`
+FOREIGN KEY (`campaign_id`) REFERENCES `campaigns`(`id`) ON DELETE CASCADE;
+
+ALTER TABLE campaigns ADD COLUMN template_id VARCHAR(255);
+
+CREATE TABLE `approved_campaigns` ( `campaign_id` INT AUTO_INCREMENT PRIMARY KEY, `campaignTitle` VARCHAR(255) NOT NULL, `campaignRunBy` VARCHAR(255) NOT NULL, `campaignDescription` TEXT NOT NULL, `amountToRaise`DECIMAL(10, 2) NOT NULL , `tags` VARCHAR(255) NOT NULL, `blockchain_id` VARCHAR(255) NOT NULL,`user_id_campaign` INT NOT NULL, `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP );
+ALTER TABLE approved_campaigns ADD COLUMN template_id VARCHAR(255);
+CREATE TABLE `approved_campaign_images` ( `image_id` INT AUTO_INCREMENT PRIMARY KEY, `approved_campaign_id` INT NOT NULL, `image_url` VARCHAR(255) NOT NULL, `image_type` ENUM('main', 'supporting') NOT NULL DEFAULT 'supporting' );
+ALTER TABLE `approved_campaigns` ADD CONSTRAINT `fk_user_id_campaign` FOREIGN KEY (`user_id_campaign`) REFERENCES `users`(`id`) ON DELETE CASCADE;
+ALTER TABLE `approved_campaign_images` ADD CONSTRAINT `fk_approved_campaign_id` FOREIGN KEY (`approved_campaign_id`) REFERENCES `approved_campaigns`(`campaign_id`) ON DELETE CASCADE;
+
+CREATE TABLE donations (
+    donation_id INT AUTO_INCREMENT PRIMARY KEY,
+    campaign_id INT NOT NULL,
+    user_id INT NOT NULL,
+    amount DECIMAL(10, 2) NOT NULL,
+    donation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (campaign_id) REFERENCES approved_campaigns(campaign_id) ON DELETE CASCADE
+);
+
+ALTER TABLE approved_campaigns
+ADD COLUMN status TINYINT(1) DEFAULT 0;  -- 0 for ongoing, 1 for completed
+
+CREATE TABLE other_campaigns (
+    other_c_id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    url VARCHAR(255) NOT NULL,
+    image_path VARCHAR(255) NOT NULL,
+    created_by INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (created_by) REFERENCES admin_signup(admin_id)
+);
+
+CREATE TABLE `disapproved_campaigns` ( `dcampaign_id` INT AUTO_INCREMENT PRIMARY KEY, `dcampaignTitle` VARCHAR(255) NOT NULL, `dcampaignRunBy` VARCHAR(255) NOT NULL, `dcampaignDescription` TEXT NOT NULL, `damountToRaise`DECIMAL(10, 2) NOT NULL , `dtags` VARCHAR(255) NOT NULL, `dblockchain_id` VARCHAR(255) NOT NULL,`duser_id_campaign` INT NOT NULL, `dcreated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP );
+ALTER TABLE `disapproved_campaigns` ADD COLUMN `dtemplate_id` VARCHAR(255);
+CREATE TABLE `disapproved_campaign_images` ( `dimage_id` INT AUTO_INCREMENT PRIMARY KEY, `disapproved_campaign_id` INT NOT NULL, `dimage_url` VARCHAR(255) NOT NULL, `dimage_type` ENUM('main', 'supporting') NOT NULL DEFAULT 'supporting' );
+ALTER TABLE `disapproved_campaigns` ADD CONSTRAINT `fk_duser_id_campaign` FOREIGN KEY (`duser_id_campaign`) REFERENCES `users`(`id`) ON DELETE CASCADE;
+ALTER TABLE `disapproved_campaign_images` ADD CONSTRAINT `fk_disapproved_campaign_id` FOREIGN KEY (`disapproved_campaign_id`) REFERENCES `disapproved_campaigns`(`dcampaign_id`) ON DELETE CASCADE;
+
+CREATE TABLE campaign_comments (
+    comment_id INT AUTO_INCREMENT PRIMARY KEY,
+    ucampaign_id INT NOT NULL,
+    cuser_id INT NOT NULL,
+    comment TEXT NOT NULL,
+    rating INT CHECK (rating BETWEEN 1 AND 5),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (ucampaign_id) REFERENCES approved_campaigns(campaign_id) ON DELETE CASCADE,
+    FOREIGN KEY (cuser_id) REFERENCES users(id) ON DELETE CASCADE
+);
