@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="ForgotP.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <title>Forgot Password</title>
+</head>
+<body>
+    <!-- NAVBAR STARTS -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <a href="Login.html" class="back-icon"><i class="fa fa-arrow-left"></i></a>
+        <a class="navbar-brand d-flex align-items-center" href="Home.html">
+            <img src="logo.PNG" alt="" width="50" height="40">
+            <span>FundRaisingC.</span>
+        </a>
+    </nav>
+    <!-- NAVBAR ENDS -->
+
+    <!-- FORGOT PASSWORD FORM STARTS -->
+    <div class="forgot-password-container">
+        <h2>Forgot Password</h2>
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="user-tab" data-bs-toggle="tab" data-bs-target="#user" type="button" role="tab" aria-controls="user" aria-selected="true">User</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="admin-tab" data-bs-toggle="tab" data-bs-target="#admin" type="button" role="tab" aria-controls="admin" aria-selected="false">Admin</button>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="user" role="tabpanel" aria-labelledby="user-tab">
+                <form id="userForm" action="UserForgotP.php" method="POST" onsubmit="return validateUserForm()">
+                    <div id="userError1" class="alert alert-danger" style="display: none;"></div>
+                    <div class="form-group mt-3">
+                        <input type="text" class="form-control" name="userEmail"placeholder="Enter Email Address" id="userEmail">
+                    </div>
+                    <div id="userError2" class="alert alert-danger" style="display: none;"></div>
+                    <div class="form-group mt-3">
+                        <input type="password" class="form-control"name="usernPassword" placeholder="Enter New Password" id="usernPassword">
+                    </div>
+                    <div id="userError3" class="alert alert-danger" style="display: none;"></div>
+                    <div class="form-group mt-3">
+                        <input type="password" class="form-control"name="usercPassword" placeholder="Confirm New Password" id="usercPassword">
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-3">Confirm</button>
+                </form>
+            </div>
+            <div class="tab-pane fade " id="admin" role="tabpanel" aria-labelledby="admin-tab">
+                <form id="adminForm" action="AForgotP.php" method="POST" onsubmit="return validateAdminForm()">
+                    <div id="adminError1" class="alert alert-danger" style="display: none;"></div>
+                    <div class="form-group mt-3">
+                        <input type="text" class="form-control" name="adminEmail" placeholder="Enter Admin Email Address" id="adminEmail">
+                    </div>
+                    <div id="adminError2" class="alert alert-danger" style="display: none;"></div>
+                    <div class="form-group mt-3">
+                        <input type="password" class="form-control" name="adminnPassword" placeholder="Enter New Password" id="adminnPassword">
+                    </div>
+                    <div id="adminError3" class="alert alert-danger" style="display: none;"></div>
+                    <div class="form-group mt-3">
+                        <input type="password" class="form-control" name="admincPassword" placeholder="Confirm New Password" id="admincPassword">
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-3">Confirm</button>
+                </form>
+            </div>
+        </div>
+    </div>
+   <!-- FORGOT PASSWORD FORM ENDS  -->
+    <script>
+        function validateUserForm() {
+                let isValid = true;
+
+                // Get form elements
+                const userEmail = document.getElementById('userEmail');
+                const usernPassword = document.getElementById('usernPassword');
+                const usercPassword = document.getElementById('usercPassword');
+                const error1 = document.getElementById('userError1');
+                const error2 = document.getElementById('userError2');
+                const error3 = document.getElementById('userError3');
+
+                // Reset error messages
+                error1.style.display = 'none';
+                error2.style.display = 'none';
+                error3.style.display = 'none';
+
+                // Validate Email
+                const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                if (!userEmail.value.trim()) {
+                    error1.textContent = "Email address cannot be empty.";
+                    error1.style.display = 'block';
+                    isValid = false;
+                } else if (!emailPattern.test(userEmail.value.trim())) {
+                    error1.textContent = "Invalid email address.";
+                    error1.style.display = 'block';
+                    isValid = false;
+                }
+
+                // Validate Password
+                const passwordPattern = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{8,20}$/;
+                if (!usernPassword.value.trim()) {
+                    error2.textContent = "New password cannot be empty.";
+                    error2.style.display = 'block';
+                    isValid = false;
+                } else if (!passwordPattern.test(usernPassword.value.trim())) {
+                    error2.textContent = "Password must be 8-20 characters long, with at least one uppercase, one lowercase, one digit, and one special character.";
+                    error2.style.display = 'block';
+                    isValid = false;
+                }
+
+                // Confirm Password
+                if (usernPassword.value.trim() !== usercPassword.value.trim()) {
+                    error3.textContent = "Passwords do not match.";
+                    error3.style.display = 'block';
+                    isValid = false;
+                }
+
+                return isValid;
+            }
+
+        // Validation function for Admin form
+        function validateAdminForm() {
+            let isValid = true;
+
+            // Get form elements
+            const adminEmail = document.getElementById('adminEmail');
+            const adminnPassword = document.getElementById('adminnPassword');
+            const admincPassword = document.getElementById('admincPassword');
+            const error1 = document.getElementById('adminError1');
+            const error2 = document.getElementById('adminError2');
+            const error3 = document.getElementById('adminError3');
+
+            // Reset error messages
+            error1.style.display = 'none';
+            error2.style.display = 'none';
+            error3.style.display = 'none';
+
+            // Validate Email
+            const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!adminEmail.value.trim()) {
+                error1.textContent = "Email address cannot be empty.";
+                error1.style.display = 'block';
+                isValid = false;
+            } else if (!emailPattern.test(adminEmail.value.trim())) {
+                error1.textContent = "Invalid email address.";
+                error1.style.display = 'block';
+                isValid = false;
+            }
+
+            // Validate Password
+            const passwordPattern = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{8,20}$/;
+            if (!adminnPassword.value.trim()) {
+                error2.textContent = "New password cannot be empty.";
+                error2.style.display = 'block';
+                isValid = false;
+            } else if (!passwordPattern.test(adminnPassword.value.trim())) {
+                error2.textContent = "Password must be 8-20 characters long, with at least one uppercase, one lowercase,one digit and one special character.";
+                error2.style.display = 'block';
+                isValid = false;
+            }
+
+            // Confirm Password
+            if (adminnPassword.value.trim() !== admincPassword.value.trim()) {
+                error3.textContent = "Passwords do not match.";
+                error3.style.display = 'block';
+                isValid = false;
+            }
+
+            return isValid;
+        }
+        
+            
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>  

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="Login.css">
+    <title>Log In</title>
+    
+</head>
+<body>
+    <!-- NAVBAR STARTS -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <a class="navbar-brand d-flex align-items-center" href="Home.php">
+            <img src="logo.PNG" alt="" width="50" height="40">
+            <span>FundRaisingC.</span>
+        </a>
+    </nav>
+    <!-- NAVBAR ENDS -->
+
+    <!-- LOGIN FORM STARTS -->
+    <div class="login-container">
+        <h2>Login</h2>
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="user-tab" data-bs-toggle="tab" data-bs-target="#user" type="button" role="tab" aria-controls="user" aria-selected="true">User</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="admin-tab" data-bs-toggle="tab" data-bs-target="#admin" type="button" role="tab" aria-controls="admin" aria-selected="false">Admin</button>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="user" role="tabpanel" aria-labelledby="user-tab">
+                <form id="userForm" action="ULogin.php" method="POST">
+                    <div id="userError1" class="alert alert-danger" style="display: none;"></div>
+                    <div class="form-group mt-3">
+                        <input type="text" class="form-control" placeholder="Enter Email Address" id="userEmail" name="email">
+                    </div>
+                    <div id="userError2" class="alert alert-danger" style="display: none;"></div>
+                    <div class="form-group mt-3">
+                        <input type="password" class="form-control" placeholder="Enter Password" id="userPassword" name="password">
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary mt-3">Login</button>
+                    <div class="text-center mt-3">
+                        <p>Don't have a account?<a href="USignup.php"> SignUp</a></p>
+                        
+                   </div>
+                    <div class="text-center mt-3">
+                         <a href="ForgotP.html">Forgot Password ?</a>
+                         
+                    </div>
+                </form>
+            </div>
+            <div class="tab-pane fade" id="admin" role="tabpanel" aria-labelledby="admin-tab">
+                <form id="adminForm" action="ALogin.php" method="post">
+                    <div id="adminError1" class="alert alert-danger" style="display: none;"></div>
+                    <div class="form-group mt-3">
+                        <input type="text" class="form-control" placeholder="Enter Email Address" id="adminEmail" name="email">
+                    </div>
+                    <div id="adminError2" class="alert alert-danger" style="display: none;"></div>
+                    <div class="form-group mt-3">
+                        <input type="password" class="form-control" placeholder="Enter Password" id="adminPassword" name="password">
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-3">Login</button>
+                    <div class="text-center mt-3">
+                        <a href="ForgotP.html">Forgot Password ?</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- SIGNUP FORM ENDS -->
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{8,20}$/;
+
+        function showErrorMessage(elementId, message, inputId) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.style.display = 'block';
+            errorElement.textContent = message;
+
+            const inputElement = document.getElementById(inputId);
+            inputElement.classList.add('error-border');
+        }
+
+        function hideAllErrorMessages() {
+            const errorElements = document.querySelectorAll('.alert-danger');
+            errorElements.forEach(element => {
+                element.style.display = 'none';
+            });
+
+            const inputElements = document.querySelectorAll('.form-control');
+            inputElements.forEach(element => {
+                element.classList.remove('error-border');
+            });
+        }
+
+        function validateUserForm() {
+            hideAllErrorMessages();
+
+            const form = document.getElementById('userForm');
+            const email = form.querySelector('#userEmail').value.trim();
+            const password = form.querySelector('#userPassword').value;
+            
+
+            let isValid = true;
+
+            if (email === "") {
+                showErrorMessage('userError1', 'Email address cannot be empty.', 'userEmail');
+                isValid = false;
+            } else if (!emailRegex.test(email)) {
+                showErrorMessage('userError1', 'Invalid email address.', 'userEmail');
+                isValid = false;
+            }
+            if (password === "") {
+                showErrorMessage('userError2', 'Password cannot be empty.', 'userPassword');
+                isValid = false;
+            } else if (!passwordRegex.test(password)) {
+                showErrorMessage('userError2', 'Password must be 8-20 characters long, contain at least one uppercase letter, one lowercase letter, one digit, and one special character.', 'userPassword');
+                isValid = false;
+            }
+            
+            return isValid;
+        }
+
+        function validateAdminForm() {
+            hideAllErrorMessages();
+
+            const form = document.getElementById('adminForm');
+            
+            const email = form.querySelector('#adminEmail').value.trim();
+            const password = form.querySelector('#adminPassword').value;
+
+            let isValid = true;
+
+            
+            if (email === "") {
+                showErrorMessage('adminError1', 'Email address cannot be empty.', 'adminEmail');
+                isValid = false;
+            } else if (!emailRegex.test(email)) {
+                showErrorMessage('adminError1', 'Invalid email address.', 'adminEmail');
+                isValid = false;
+            }
+            if (password === "") {
+                showErrorMessage('adminError2', 'Password cannot be empty.', 'adminPassword');
+                isValid = false;
+            } else if (!passwordRegex.test(password)) {
+                showErrorMessage('adminError2', 'Password must be 8-20 characters long, contain at least one uppercase letter, one lowercase letter, one digit, and one special character.', 'adminPassword');
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        document.getElementById('userForm').addEventListener('submit', function (event) {
+            if (!validateUserForm()) {
+                event.preventDefault();
+            }
+        });
+
+        document.getElementById('adminForm').addEventListener('submit', function (event) {
+            if (!validateAdminForm()) {
+                event.preventDefault();
+            }
+        });
+
+
+    </script>
+</body>
+</html>

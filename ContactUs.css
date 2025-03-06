@@ -1,0 +1,139 @@
+.btn {
+    background-color: white;
+    margin-right: 15px;
+    border-color: gray;
+}
+
+.btn:focus+.btn, .btn:focus {
+    outline: 0;
+    box-shadow: 0 0 0 0 rgb(13 110 253 / 25%);
+}
+
+.nav-link {
+    margin-left: 45px;
+}
+
+.btn {
+    background-color: white;
+    color: black;
+}
+
+.btn:hover {
+    background-color: black;
+    color: white;
+}
+
+.dropdown-item:hover {
+    background-color: black;
+    color: white;
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+    margin-left: 55px;
+}
+
+.search-container form {
+    display: flex;
+    align-items: center;
+}
+
+.search-container input[type="text"] {
+    padding: 8px;
+    border: none;
+    margin-right: 4px;
+}
+
+input:where(:focus) {
+    outline: none !important;
+    border: none;
+}
+
+.form-control, .form-control:focus {
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    width: 70%;
+}
+
+.btn-submit {
+    width: 30%;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: black;
+    border: none;
+    color: white;
+}
+
+.btn-submit:hover {
+    background-color: black;
+}
+
+.btn-submit:focus,
+.btn-submit:active {
+    outline: none;
+    box-shadow: none;
+}
+
+.footer {
+    background-color: black;
+    height: 30vh;
+    padding: 20px 10px; /* Add padding to top, bottom, left, and right */
+}
+
+.footer .logo img {
+    width: 50px;
+    height: 40px;
+    margin-right: 10px;
+    margin-left: 50px;
+    margin-top: 30px;
+}
+
+.footer .social-links {
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin: auto 0; /* Center vertically */
+}
+
+.footer .section-links {
+    justify-content: center; /* Center the section links */
+    flex-direction: column;
+    align-items: center; /* Center items horizontally */
+    gap: 10px;
+    margin: auto 0; /* Center vertically */
+}
+
+.footer a {
+    color: white;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.footer a:hover {
+    color: #ccc;
+}
+
+.footer span {
+    color: white;
+    margin-top: 30px;
+    font-size: 19px;
+}
+.alert-danger {
+    display: none;
+    font-size: 14px;
+    color: red;
+    background-color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+/* Red border for input fields with errors */
+.error-border {
+    border-color: red !important;
+}

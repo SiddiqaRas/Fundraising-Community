@@ -1,0 +1,91 @@
+.template-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+.template {
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    text-align: center;
+    width: 22%;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: border-color 0.3s;
+}
+.template.selected {
+    border-color: #000000;
+}
+.template-info {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 20px;
+    margin-top: 10px;
+}
+.template-info h3 {
+    margin-top: 0;
+}
+.editable {
+    border: 1px dashed #ccc;
+    padding: 5px;
+    cursor: text;
+}
+.image-preview {
+    width: 100%;
+    max-height: 150px;
+    object-fit: cover;
+}
+/* Template Styles */
+.template1-info {
+    background-color: #f8f9fa;
+    color: #333;
+}
+.template2-info {
+    background-color: #e9ecef;
+    color: #007bff;
+}
+.template3-info {
+    background-color: #ffffff;
+    color: #28a745;
+}
+.template4-info {
+    background-color: #f1f3f5;
+    color: #6c757d;
+}
+.navigation-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    position: relative; /* Ensure container positioning */
+}
+.back-button {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+}
+.btn-block {
+    background-color: #000000 !important;
+    border-color: #000000 !important;
+    color: white !important;
+    border-radius: 5px;
+    width: auto; 
+    max-width: 200px; 
+}
+.btn-block:hover {
+    background-color: #000000 !important;
+    border-color: #000000 !important;
+    color: white !important;
+    text-decoration: none !important;
+}
+.preview-button-container {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    margin: 0;
+    padding: 0;
+}

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preview Campaign</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="Preview.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="button-container">
+            <button class="btn btn-secondary" onclick="goBack()">Edit</button>
+            <button class="btn btn-primary" onclick="submitCampaign()">Submit</button>
+        </div>
+        <h2 class="text-center mb-4">Preview Your Campaign</h2>
+        <div id="templateInfo" class="template-info"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const template = urlParams.get('template');
+            const campaignTitle = urlParams.get('campaignTitle');
+            const campaignRunBy = urlParams.get('campaignRunBy');
+            const campaignDescription = urlParams.get('campaignDescription');
+            const amountToRaise = urlParams.get('amountToRaise');
+            const tags = urlParams.get('tags');
+            const mainImage = urlParams.get('mainImage');
+            const supportingImages = urlParams.get('supportingImages').split(',');
+
+            const templateInfo = document.getElementById('templateInfo');
+            let templateClass = '';
+
+            switch (template) {
+                case 'template1':
+                    templateClass = 'template1-preview';
+                    templateInfo.innerHTML = `
+                        <div class="${templateClass}">
+                            <h3>${campaignTitle}</h3>
+                            <p><strong>Run By:</strong> ${campaignRunBy}</p>
+                            <p><strong>Description:</strong> ${campaignDescription}</p>
+                            <p><strong>Amount to Raise:</strong> ${amountToRaise}</p>
+                            <p><strong>Tags:</strong> ${tags}</p>
+                            <div><strong>Main Image:</strong></div>
+                            <img src="${mainImage}" alt="Main Image">
+                            <div><strong>Supporting Images:</strong></div>
+                            <div class="image-preview-container">
+                                ${supportingImages.map(img => `<img src="${img}" alt="Supporting Image">`).join('')}
+                            </div>
+                        </div>
+                    `;
+                    break;
+                case 'template2':
+                    templateClass = 'template2-preview';
+                    templateInfo.innerHTML = `
+                        <div class="${templateClass}">
+                            <h3>${campaignTitle}</h3>
+                            <div><strong>Main Image:</strong></div>
+                            <img src="${mainImage}" alt="Main Image">
+                            <p><strong>Run By:</strong> ${campaignRunBy}</p>
+                            <p><strong>Description:</strong> ${campaignDescription}</p>
+                            <p><strong>Amount to Raise:</strong> ${amountToRaise}</p>
+                            <p><strong>Tags:</strong> ${tags}</p>
+                            <div><strong>Supporting Images:</strong></div>
+                            <div class="image-preview-container">
+                                ${supportingImages.map(img => `<img src="${img}" alt="Supporting Image">`).join('')}
+                            </div>
+                        </div>
+                    `;
+                    break;
+                case 'template3':
+                    templateClass = 'template3-preview';
+                    templateInfo.innerHTML = `
+                        <div class="${templateClass}">
+                            <h3>${campaignTitle}</h3>
+                            <div><strong>Main Image:</strong></div>
+                            <img src="${mainImage}" alt="Main Image">
+                            <div><strong>Supporting Images:</strong></div>
+                            <div class="image-preview-container">
+                                ${supportingImages.map(img => `<img src="${img}" alt="Supporting Image">`).join('')}
+                            </div>
+                            <p><strong>Run By:</strong> ${campaignRunBy}</p>
+                            <p><strong>Description:</strong> ${campaignDescription}</p>
+                            <p><strong>Amount to Raise:</strong> ${amountToRaise}</p>
+                            <p><strong>Tags:</strong> ${tags}</p>
+                        </div>
+                    `;
+                    break;
+                case 'template4':
+                    templateClass = 'template4-preview';
+                    templateInfo.innerHTML = `
+                        <div class="${templateClass}">
+                            <h3>${campaignTitle}</h3>
+                            <p><strong>Run By:</strong> ${campaignRunBy}</p>
+                            <div><strong>Main Image:</strong></div>
+                            <img src="${mainImage}" alt="Main Image">
+                            <p><strong>Description:</strong> ${campaignDescription}</p>
+                            <p><strong>Amount to Raise:</strong> ${amountToRaise}</p>
+                            <p><strong>Tags:</strong> ${tags}</p>
+                            <div><strong>Supporting Images:</strong></div>
+                            <div class="image-preview-container">
+                                ${supportingImages.map(img => `<img src="${img}" alt="Supporting Image">`).join('')}
+                            </div>
+                        </div>
+                    `;
+                    break;
+                default:
+                    templateInfo.innerHTML = '<p>Template not found.</p>';
+            }
+        });
+
+        function goBack() {
+            window.history.back();
+        }
+
+        function submitCampaign() {
+            // Handle form submission logic here
+            alert('Campaign Submitted!');
+        }
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
